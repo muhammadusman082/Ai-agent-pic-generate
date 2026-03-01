@@ -9,4 +9,5 @@ class AgentState(TypedDict):
     iteration_count: int
     quality_score: float
     status: str
+    max_iterations: int
     messages: List[str] # for tracking steps

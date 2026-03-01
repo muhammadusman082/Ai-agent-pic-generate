@@ -39,6 +39,34 @@ This will start:
 
 ---
 
+### 🧷 Azure Deployment & Common Pitfalls
+
+When you push the project to Azure (App Service, Container Instance, etc.), remember:
+
+1. **Set environment variables** in the App Settings (don’t rely on a `.env` file):
+   ```
+   SILICONFLOW_API_KEY=...
+   LANGFUSE_ENABLED=true
+   LANGFUSE_PUBLIC_KEY=...
+   LANGFUSE_SECRET_KEY=...
+   PORT=8000  # Azure provides this automatically for Web Apps
+   ```
+2. **Protocol alignment** – the frontend now uses `window.location.protocol` so that
+   HTTPS sites will call the backend over HTTPS. If you hardcode `http://` you’ll
+   see mixed‑content errors and image generation requests will be blocked.
+3. **Outbound network** – ensure the service is allowed to reach `api.siliconflow.cn`.
+   App Service might require explicit networking rules or use of a vNet.
+4. **Logs** – check the container logs for startup messages like `🔑 API Key Loaded` and
+   HTTP errors from the image service. Most generation failures are simply missing or
+   invalid API keys.
+
+After deployment, open the browser dev tools and look for network errors if images
+aren’t appearing. When deploying via Docker Compose, the `backend` container respects
+the `$PORT` variable and can be used on any host.
+
+
+---
+
 ## 🏗️ Architecture
 
 - **Backend**: FastAPI app serving LangGraph agent.
