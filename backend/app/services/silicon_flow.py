@@ -7,7 +7,7 @@ LOGGER = logging.getLogger(__name__)
 
 class SiliconFlowService:
     def __init__(self):
-        self.api_key = os.getenv("SILICONFLOW_API_KEY")
+        self.api_key = os.getenv("SILICONFLOW_API_KEY", "sk-gsnwjtbnkpxvxwutbooszmvacnkmedvixbiemenaajbdxgwp")
         self.base_url = "https://api.siliconflow.cn/v1"
         print(f"🔑 API Key Loaded: {'Yes' if self.api_key else 'No'}")
         if self.api_key:

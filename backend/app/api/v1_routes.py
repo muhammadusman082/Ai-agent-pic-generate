@@ -81,6 +81,7 @@ async def get_status(task_id: str):
         result = task["result"]
         response.update({
             "generated_image": result.get("generated_image_url"),
+            "generated_image_url": result.get("generated_image_url"), 
             "quality_score": result.get("quality_score"),
             "current_step": "done"
         })

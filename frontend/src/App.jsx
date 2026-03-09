@@ -29,7 +29,7 @@ function App() {
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col items-center justify-center space-y-8">
                     <div className="w-full max-w-2xl min-h-[512px]">
-                        <ImageCanvas image={result?.generated_image} loading={loading} />
+                        <ImageCanvas image={result?.generated_image_url || result?.generated_image} loading={loading} />
                     </div>
 
                     <div className="w-full max-w-2xl space-y-4">
