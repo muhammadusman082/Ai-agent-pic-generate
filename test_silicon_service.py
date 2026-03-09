@@ -21,6 +21,8 @@ async def test_service():
         # Using a very short steps to fail fast or just check the call
         result = await service.generate_image(prompt="test", steps=1)
         print(f"Result: {result}")
+    except RuntimeError as e:
+        print(f"❌ RuntimeError (likely missing API key): {e}")
     except AttributeError as e:
         print(f"❌ AttributeError: {e}")
     except Exception as e:

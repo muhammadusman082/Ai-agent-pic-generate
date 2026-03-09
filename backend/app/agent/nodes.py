@@ -14,9 +14,11 @@ async def planner_node(state: AgentState) -> Dict[str, Any]:
 async def generator_node(state: AgentState) -> Dict[str, Any]:
     prompt = state.get("optimized_prompt", state["original_prompt"])
     print(f"Generating image for: {prompt}")
-    silicon_flow = get_silicon_flow()
-    print(f"🔑 Using API Key: {silicon_flow.api_key[:15] if silicon_flow.api_key else 'NONE'}...")
-    image_url = await silicon_flow.generate_image(prompt)
+    try:
+        image_url = await silicon_flow.generate_image(prompt)
+    except Exception as e:
+        # bubble up configuration/network errors
+        return {"status": "failed", "messages": [f"Image generation error: {e}"]}
     if not image_url:
         return {"status": "failed", "messages": ["Image generation failed"]}
     

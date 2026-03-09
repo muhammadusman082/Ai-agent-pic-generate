@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 
 // Replace hardcoded localhost with the dynamic hostname of the current window
 // This allows the app to be accessed from other devices via the VM's IP address.
-const defaultUrl = `http://${window.location.hostname}:8001`;
+// Use the current page protocol (http/https) to avoid mixed‑content errors in production.
+const defaultUrl = `${window.location.protocol}//${window.location.hostname}:8001`;
 let envUrl = import.meta.env.VITE_API_URL;
 if (envUrl && (envUrl.includes('localhost') || envUrl.includes('127.0.0.1'))) {
     envUrl = envUrl.replace(/localhost|127\.0\.0\.1/g, window.location.hostname);

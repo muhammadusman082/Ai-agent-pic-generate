@@ -16,8 +16,8 @@ class SiliconFlowService:
 
     async def generate_image(self, prompt: str, steps: int = 20) -> Optional[str]:
         if not self.api_key:
-            print("❌ ERROR: No API Key found!")
-            return None
+            # escalate the missing key since it's a configuration issue
+            raise RuntimeError("SiliconFlow API key not configured")
         
         headers = {
             "Authorization": f"Bearer {self.api_key}",
@@ -43,10 +43,17 @@ class SiliconFlowService:
                 
                 print(f"📥 Response Status: {response.status_code}")
                 
-                response.raise_for_status()
+                # If the request failed, log body for debugging
+                try:
+                    response.raise_for_status()
+                except httpx.HTTPStatusError as http_err:
+                    print(f"❌ HTTP error from SiliconFlow: {http_err}")
+                    print("Response body:", response.text)
+                    return None
+
                 data = response.json()
                 
-                # ✅ FIX: Pehle "images" check karo, phir "data"
+                # support both old and new response formats
                 if "images" in data and len(data["images"]) > 0:
                     image_url = data["images"][0].get("url")
                     print(f"✅ Image URL (from images): {image_url}")
@@ -60,5 +67,6 @@ class SiliconFlowService:
                     return None
                     
             except Exception as e:
-                print(f"❌ Error: {str(e)}")
+                # catch network issues, timeouts, etc.
+                print(f"❌ Error contacting SiliconFlow: {str(e)}")
                 return None
